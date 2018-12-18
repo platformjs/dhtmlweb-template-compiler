@@ -1,0 +1,70 @@
+<html>
+<head>
+    <style>
+        span {
+            display: block;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../dist/spyjs.js"></script>
+    <script>
+        $(() => {
+            const signal = new SJS.Signal(0);
+            class Item {
+                constructor(id, name, items) {
+                    this.values = {
+                        id: id,
+                        name: name,
+                        items: items
+                    };
+                }
+                get(name) { return this.values[name]; }
+                set(name, value) { this.values[name] = value; return this; }
+            };
+            const view = {
+                values: {
+                    name: "Example",
+                    items: [new Item("id1", "name1", [new Item("id1", "name1"), new Item("id2", "name2")]), 
+                        new Item("id2", "name2", [new Item("id1", "name1"), new Item("id2", "name2")])]
+                },
+                get: function(name) { return this.values[name]; },
+                set: function(name, value) { this.values[name] = value; return this; }
+            };
+            SJS.compile($("body")[0], view, signal);
+            const items = view.get("items");
+            items.splice(1, 0, new Item("id3", "name3"));
+            signal.beep();
+            const t = items[2];
+            items[2] = items[1];
+            items[1] = t;
+            signal.beep(0);
+            // items.shift();
+            signal.beep();
+        });
+    </script>
+</head>
+<body style="padding:0;margin:0;border:0;">
+    <div>
+        <label s-text="get('name')"></label>
+        <ul s-collection="get('items') get('id')">
+            <li s-attr="id:get('id')" s-text="get('name')"></li>
+        </ul>
+        <div s-collection="get('items') get('id')">
+            <div>
+                <div s-text="get('name')"></div>
+                <div s-collection="get('items') get('id')">
+                    <div style="padding-left:20px;" s-text="get('name')"></div>
+                </div>
+            </div>
+        </div>
+        <span s-collection="get('items') get('id')">
+            <span>
+                <span s-text="get('name')"></span>
+                <span s-collection="get('items') get('id')">
+                    <span style="padding-left:20px;" s-text="get('name')"></span>
+                </span>
+            </span>
+        </span>
+    </div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<html>
+<head>
+    <style>
+        .nav {
+            width: 300px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }    
+        .content {
+            position: absolute;
+            left: 310px;
+            right: 10px;
+            top: 10px;
+        }
+        iframe {
+            border: 0px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../dist/spyjs.js"></script>
+    <script src="../dist/sites.js"></script>
+</head>
+<body>
+    <div class="nav" s-event="click@a:onNav">
+        <a href="#" name="SimpleValue" src="./src/SimpleValue.js">Spy Value</a><br/>
+        <a href="#">Spy Text</a><br/>
+        <a href="#">Spy Html</a><br/>
+        <a href="#">Spy Style</a><br/>
+        <a href="#">Spy Style Class</a><br/>
+        <a href="#">Spy Attribute</a><br/>
+        <a href="#">Spy Event</a><br/>
+        <a href="#">Advanced Spy Value</a><br/>
+    </div>
+    <div class="content">
+        <div class="result">
+
+        </div>
+        <div>
+            <br/>
+            <label>Source Code</label>
+            <iframe s-attr="src:source" style="width:100%;min-height:500px;"></iframe>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    const signal = new SJS.Signal();
+    const view = {
+        onNav: function(evt) {
+            const $a = $(evt.target);
+            this.render($a.attr("name"), $a.attr("src"));
+        },
+        render(name, source) {
+            const view = new site[name]();
+            view.render();
+            $(".result").html(view.$el);
+            this.source = source;
+            signal.beep();
+        }
+    };
+    SJS.compile(document.getElementsByTagName("body")[0], view, signal);
+    view.render("SimpleValue", "./src/SimpleValue.js");
+</script>

@@ -1,0 +1,1 @@
+window.site = require("./index");

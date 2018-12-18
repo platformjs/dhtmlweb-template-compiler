@@ -1,0 +1,1 @@
+window.dwebCompiler = require("./index");

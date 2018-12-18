@@ -1,0 +1,53 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../dist/spyjs.js"></script>
+    <script>
+        $(() => {
+            const signal = new SJS.Signal();
+            let cat = {
+                values: {
+                    top: 10,
+                    left: 10,
+                    xStep: 20,
+                    yStep: 20
+                },
+                get: function(name) { return this.values[name]; },
+                set: function(name, value) { this.values[name] = value; return this; },
+                move: function() {
+                    const windowWidth = $(window).width() - 60;
+                    const windowHeight = $(window).height() - 20;
+                    let left = this.get("left");
+                    let top = this.get("top");
+                    left += this.get("xStep");
+                    if (left > windowWidth) {
+                        left = 2 * windowWidth - left;
+                        this.set("xStep", 0 - this.get("xStep"));
+                    } else if (left < 0) {
+                        left = 0 - left;
+                        this.set("xStep", 0 - this.get("xStep"));
+                    }
+                    top += this.get("yStep");
+                    if (top > windowHeight) {
+                        top = 2 * windowHeight - top;
+                        this.set("yStep", 0 - this.get("yStep"));
+                    } else if (top < 0) {
+                        top = 0 - top;
+                        this.set("yStep", 0 - this.get("yStep"));
+                    }
+                    this.set("left", left);
+                    this.set("top", top);
+                }
+            };
+            SJS.compile($("body")[0], cat, signal);
+            setInterval(() => {
+                cat.move();
+                signal.beep();
+            }, 200);
+        });
+    </script>
+</head>
+<body style="padding:0;margin:0;border:0;">
+    <button style="position:absolute;display:inline-block;width:60px;height:20px;" s-style="left#px:get('left')|top#px:get('top')">Cat</button>
+</body>
+</html>

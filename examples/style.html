@@ -1,0 +1,97 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../dist/spyjs.js"></script>
+    <script>
+        let view;
+        $(() => {
+            const signal = new SJS.Signal();
+            view = {
+                vs: {
+                    salary: 2000
+                },
+                get: function(name) {
+                    return this.vs[name];
+                },
+                set: function(name, value) {
+                    this.vs[name] = value;
+                },
+                getColor: function() {
+                    return this.color;
+                },
+                getWidth: function() {
+                    return this.width;
+                },
+                width: 60,
+                color: "red",
+                getHtml: function() {
+                    return "<input>"
+                },
+                getText: function() {
+                    return "<input>"
+                },
+                getClass1() {
+                    return this.cls1;
+                },
+                getClass2() {
+                    return this.cls2;
+                },
+                cls1: "sa",
+                cls2: "sb",
+                isDisabled() {
+                    return this.disabled;
+                },
+                disabled: false,
+                id: function() {
+                    return "id123"
+                },
+                onClick: function() {
+                    const view = this;
+                    view.width = 200;
+                    view.color = "blue";
+                    view.cls1 = "csa";
+                    view.cls2 = "csb";
+                    view.disabled = true;
+                    signal.beep();
+                },
+                onClick2: function(evt) {
+                    console.log(evt);
+                }
+            };
+            SJS.compile($("body")[0], view, signal);
+            $("button#id2").click(() => {
+                view.width = 60;
+                view.disabled = false;
+                view.color = "red";
+                signal.beep();
+            });
+            for(let i = 0; i < 1000; i++) {
+                signal.beep();
+            }
+        });
+    </script>
+</head>
+<body>
+    <button id="id1" s-style="color:getColor()|width#px:getWidth()"
+        s-attr="disabled:isDisabled()"
+        s-event="click:onClick">OK</button>
+    <button id="id2" s-style="color:getColor()|width#px:getWidth()">Dismiss</button>
+    <div s-html="getHtml()"></div>
+    <div s-text="getText()"></div>
+    <div s-attr="id:id()"
+        s-class="getClass1()|getClass2()"
+        s-style="width#px:getWidth()" style="height:40px;display:inline-block;border:1px solid #ccc;">abc</div>
+    <div s-event="click@button.ok:onClick2">
+        <div>
+            <div>
+                <button class="ok">Sim</button>
+                <button>not work</button>
+                <button class="ok">Sim</button>
+                <button>not work</button>
+            </div>
+        </div>
+    </div>
+    <input s-value="get@salary:set@salary:${0}:number:^\d+$">
+    <input s-value="get@salary:set@salary:{0}$:number:^\d+$">
+</body>
+</html>

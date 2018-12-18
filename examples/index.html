@@ -1,0 +1,52 @@
+<html>
+<head>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            border: 0;
+        }
+        iframe {
+            border: 0px;
+            width: 100%;
+            height: calc(100% - 20px);
+        }
+        .nav {
+            height: 20px;
+            line-height: 20px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../dist/spyjs.js"></script>
+    <script>
+        $(() => {
+            const signal = new SJS.Signal();
+            const view = {
+                values: {
+                    src: "./home.html"
+                },
+                get: function(name) { return this.values[name]; },
+                set: function(name, value) { this.values[name] = value; return this; },
+                onClick: function(evt) {
+                    const $target = $(evt.target);
+                    this.set("src", $target.attr("src"));
+                    signal.beep();
+                }
+            };
+            SJS.compile($("body")[0], view, signal);
+        });
+    </script>
+</head>
+<body>
+    <div class="nav" s-event="click@a:onClick">
+        <a href="#" src="./home.html">Home</a>
+        <a href="#" src="./input.html">Input</a>
+        <a href="#" src="./cat.html">Cat</a>
+        <a href="#" src="./collection.html">Collection</a>
+        <a href="#" src="./content.html">Content</a>
+    </div>
+    <div>
+        <iframe id="main" s-attr="src:get('src')"></iframe>
+    </div>
+</body>
+</html>

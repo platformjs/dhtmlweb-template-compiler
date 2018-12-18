@@ -1,0 +1,25 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../dist/spyjs.js"></script>
+    <script>
+        $(() => {
+            const signal = new SJS.Signal();
+            let view = {
+                values: {
+                    salary: 1234.56
+                },
+                get: function(name) { return this.values[name]; },
+                set: function(name, value) { this.values[name] = value; return this; }
+            };
+            SJS.compile($("body")[0], view, signal);
+        });
+    </script>
+</head>
+<body style="padding:0;margin:0;border:0;">
+    <div s-text="get('salary')"></div>
+    <div s-text="get('salary'):$ {0}"></div>
+    <div s-html="get('salary')"></div>
+    <div s-html="get('salary'):&lt;button&gt;{0}&lt;/button&gt;"></div>
+</body>
+</html>
