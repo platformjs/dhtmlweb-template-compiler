@@ -52,6 +52,9 @@ module.exports = class WatchSignal {
         const nodeName = el.nodeName;
         return nodeName.toLowerCase() === "html";
     }
+    clean() {
+        this.watches.length = 0;
+    }
     _gc() {
         const n = this.watches.length;
         const time = new Date().getTime();

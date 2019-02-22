@@ -14,9 +14,14 @@ function compileEL(el, view, signals) {
         new Handler(el, value, view, signals);
     }
 }
-module.exports = function compile(el, view, signals) {
+module.exports = function compile(el, view, signals, shouldClearSignal) {
     if (!(signals instanceof Array)) {
         signals = [signals];
+    }
+    if (shouldClearSignal) {
+        signals.forEach(signal => {
+            signal.clean();
+        });
     }
     let s = [el];
     while (s.length) {
